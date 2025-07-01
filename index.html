@@ -1,224 +1,646 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>@phpcarry | Links</title>
-<style>
-/* Reset */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHPCarry - সোশ্যাল প্রোফাইল ও পেমেন্ট</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff; /* A nice blue for fixed border */
+            --light-bg: #f0f2f5;
+            --light-card-bg: #ffffff;
+            --light-text: #333333;
+            --light-link-bg: linear-gradient(135deg, #6dd5ed, #2193b0);
+            --light-link-text: #ffffff;
+            --light-border-color: var(--primary-color);
 
-/* Theme variables */
-:root {
-  --bg-1: #ffffff;
-  --bg-2: #f7f7f9;
-  --text: #1e1e1e;
-  --accent: #0066ff;
-  --link-bg: rgba(0, 102, 255, 0.08);
-}
+            --dark-bg: #1a1a2e;
+            --dark-card-bg: #16213e;
+            --dark-text: #e0e0e0;
+            --dark-link-bg: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            --dark-link-text: #ffffff;
+            --dark-border-color: var(--primary-color);
 
-body[data-theme="dark"] {
-  --bg-1: #0f0f10;
-  --bg-2: #1a1a1d;
-  --text: #f5f5f7;
-  --accent: #70b0ff;
-  --link-bg: rgba(112, 176, 255, 0.1);
-}
+            --hover-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            --transition-speed: 0.3s ease-in-out;
+        }
 
-html, body {
-  height: 100%;
-  background: var(--bg-1);
-  color: var(--text);
-  font-family: "Segoe UI", Roboto, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.5;
-  transition: background 0.4s ease, color 0.4s ease;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--light-bg);
+            color: var(--light-text);
+            transition: background var(--transition-speed), color var(--transition-speed);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-/* Preloader */
-#preloader {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-1);
-  z-index: 9999;
-  transition: opacity 0.6s ease;
-}
-#preloader.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
 
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 5px solid var(--accent);
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 20px;
+            padding: 30px;
+            background: var(--light-card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInLoad 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--light-border-color); /* Fixed border color */
+            transition: background var(--transition-speed), border-color var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+        }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+        body.dark-mode .container {
+            background: var(--dark-card-bg);
+            border: 2px solid var(--dark-border-color);
+        }
 
-/* Container */
-.container {
-  max-width: 480px;
-  width: 92%;
-  background: linear-gradient(var(--bg-1), var(--bg-2)) padding-box,
-              linear-gradient(120deg,
-                #ff6ec4,
-                #7873f5,
-                #66d9e8,
-                #ffd86f,
-                #ff6ec4) border-box;
-  border: 4px solid transparent;
-  border-radius: 28px;
-  padding: 2rem 2.5rem;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  animation: borderShift 8s linear infinite;
-}
+        @keyframes fadeInLoad {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.container.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid var(--primary-color); /* Fixed border color */
+            transition: transform 0.3s ease;
+        }
 
-@keyframes borderShift {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
+        .profile-pic:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
 
-/* Avatar */
-.avatar {
-  width: 128px;
-  height: 128px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid var(--accent);
-  margin-bottom: 1rem;
-  box-shadow: 0 0 12px rgba(0,0,0,0.15);
-}
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: var(--light-text);
+            transition: color var(--transition-speed);
+        }
 
-/* Name */
-h1 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-}
+        body.dark-mode h1 {
+            color: var(--dark-text);
+        }
 
-/* Links list */
-.links {
-  list-style: none;
-  margin-bottom: 1.5rem;
-}
+        p {
+            font-size: 1.1em;
+            color: var(--light-text);
+            margin-bottom: 30px;
+            transition: color var(--transition-speed);
+        }
 
-.links li + li {
-  margin-top: 0.75rem;
-}
+        body.dark-mode p {
+            color: var(--dark-text);
+        }
 
-.links a {
-  display: block;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  background: var(--link-bg);
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
-  backdrop-filter: blur(6px);
-  transition: transform 0.2s ease;
-}
+        .link-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.links a:hover {
-  transform: translateY(-3px);
-}
+        .link-item {
+            margin-bottom: 18px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: slideIn 0.6s forwards ease-out;
+        }
 
-/* Toggle button */
-#themeToggle {
-  cursor: pointer;
-  padding: 0.6rem 1rem;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4);
-  transition: background 0.4s ease, transform 0.2s ease;
-}
+        .link-item:nth-child(1) { animation-delay: 0.2s; }
+        .link-item:nth-child(2) { animation-delay: 0.3s; }
+        .link-item:nth-child(3) { animation-delay: 0.4s; }
+        .link-item:nth-child(4) { animation-delay: 0.5s; }
+        .link-item:nth-child(5) { animation-delay: 0.6s; }
+        .link-item:nth-child(6) { animation-delay: 0.7s; }
 
-#themeToggle:hover {
-  transform: translateY(-2px);
-}
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-/* Responsive tweaks */
-@media (max-width: 480px) {
-  .container {
-    padding: 1.5rem;
-  }
-  h1 {
-    font-size: 1.5rem;
-  }
-}
-</style>
+        .link-item a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 25px;
+            background: var(--light-link-bg);
+            color: var(--light-link-text);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        body.dark-mode .link-item a {
+            background: var(--dark-link-bg);
+        }
+
+        .link-item a:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .link-item a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.4s ease-in-out;
+            transform: skewX(-20deg);
+        }
+
+        .link-item a:hover::before {
+            left: 100%;
+        }
+
+        .icon {
+            margin-right: 12px;
+            font-size: 1.3em;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--light-link-bg);
+            color: var(--light-link-text);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.4em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background var(--transition-speed), color var(--transition-speed), transform 0.2s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: var(--dark-link-bg);
+            color: var(--dark-link-text);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Payment Section Styles */
+        .payment-section {
+            margin-top: 40px;
+            text-align: left;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding-top: 30px;
+            animation: fadeInLoad 1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation-delay: 0.8s; /* Delay for payment section */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        body.dark-mode .payment-section {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-section h2 {
+            font-size: 1.8em;
+            color: var(--light-text);
+            margin-bottom: 25px;
+            text-align: center;
+            transition: color var(--transition-speed);
+        }
+
+        body.dark-mode .payment-section h2 {
+            color: var(--dark-text);
+        }
+
+        .payment-option {
+            background: var(--light-card-bg);
+            border: 1px solid var(--light-border-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transition: background var(--transition-speed), border-color var(--transition-speed), transform 0.2s ease;
+            cursor: pointer;
+            position: relative; /* For copy button */
+        }
+
+        body.dark-mode .payment-option {
+            background: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+        }
+
+        .payment-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            margin-right: 15px;
+            object-fit: contain;
+        }
+
+        .payment-details {
+            flex-grow: 1;
+        }
+
+        .payment-details h3 {
+            font-size: 1.1em;
+            margin: 0 0 5px 0;
+            color: var(--light-text);
+            transition: color var(--transition-speed);
+        }
+
+        body.dark-mode .payment-details h3 {
+            color: var(--dark-text);
+        }
+
+        .payment-details p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+            transition: color var(--transition-speed);
+        }
+
+        body.dark-mode .payment-details p {
+            color: #b0b0b0;
+        }
+
+        .payment-note {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.95em;
+            color: #856404;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body.dark-mode .payment-note {
+            background-color: #3b2f00;
+            border-left-color: #ffc107;
+            color: #ffeb8f;
+        }
+
+        .payment-note .speaker-icon {
+            margin-right: 8px;
+            color: #ffc107;
+        }
+
+        /* Copy Button Styles */
+        .copy-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .copy-button i {
+            font-size: 1em;
+        }
+
+        .copy-message {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .payment-option.copied .copy-message {
+            opacity: 1;
+            bottom: 5px;
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .link-item a {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            .profile-pic {
+                width: 100px;
+                height: 100px;
+            }
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+            .payment-section h2 {
+                font-size: 1.6em;
+            }
+            .payment-option {
+                flex-direction: row; /* Keep horizontal on mobile too */
+                align-items: center;
+                text-align: left;
+                padding-right: 80px; /* Space for copy button */
+            }
+            .payment-logo {
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+            }
+            .copy-button {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body data-theme="light">
-  <!-- Preloader -->
-  <div id="preloader">
-    <div class="spinner"></div>
-  </div>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
 
-  <!-- Main card -->
-  <div class="container" id="card">
-    <img class="avatar" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/60439ced0e27ef00017f5c24/0x0.png" alt="phpcarry logo">
-    <h1>@phpcarry</h1>
+        <img src="https://s3-eu-west-1.amazonaws.com/tpd/logos/60439ced0e27ef00017f5c24/0x0.png" alt="PHPCarry Logo" class="profile-pic">
+        <h1>PHPCarry</h1>
+        <p>আপনার ওয়েব ডেভেলপমেন্ট সমাধানের জন্য সেরা ঠিকানা</p>
 
-    <ul class="links">
-      <li><a href="mailto:phpcarry@gmail.com">Email: phpcarry@gmail.com</a></li>
-      <li><a href="https://phpcarry.com" target="_blank" rel="noopener">🌐 Website</a></li>
-      <li><a href="https://wa.me/8801864900990" target="_blank" rel="noopener">💬 WhatsApp</a></li>
-      <li><a href="tel:+8801864900990">📞 Phone Call</a></li>
-      <li><a href="https://www.facebook.com/phpcarry" target="_blank" rel="noopener">📘 Facebook</a></li>
-      <li><a href="https://t.me/phpcarry" target="_blank" rel="noopener">✈️ Telegram</a></li>
-    </ul>
+        <ul class="link-list">
+            <li class="link-item">
+                <a href="https://phpcarry.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-globe icon"></i> ওয়েবসাইট
+                </a>
+            </li>
+            <li class="link-item">
+                <a href="https://www.facebook.com/phpcarry" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-facebook icon"></i> ফেসবুক
+                </a>
+            </li>
+            <li class="link-item">
+                <a href="https://t.me/phpcarry" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-telegram-plane icon"></i> টেলিগ্রাম
+                </a>
+            </li>
+            <li class="link-item">
+                <a href="https://wa.me/8801864900990" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp icon"></i> হোয়াটসঅ্যাপ
+                </a>
+            </li>
+            <li class="link-item">
+                <a href="tel:+8801864900990">
+                    <i class="fas fa-phone icon"></i> কল করুন
+                </a>
+            </li>
+            <li class="link-item">
+                <a href="mailto:phpcarry@gmail.com">
+                    <i class="fas fa-envelope icon"></i> ইমেইল করুন
+                </a>
+            </li>
+        </ul>
 
-    <button id="themeToggle">Switch to Dark Mode</button>
-  </div>
+        <div class="payment-section">
+            <h2>পেমেন্ট করুন</h2>
 
-<script>
-  const preloader = document.getElementById('preloader');
-  const card = document.getElementById('card');
-  const toggleBtn = document.getElementById('themeToggle');
-  
-  // Show main after load
-  window.addEventListener('load', () => {
-    setTimeout(() => {      // small delay for effect
-      preloader.classList.add('hidden');
-      card.classList.add('show');
-    }, 700);
-  });
-  
-  // Theme toggle
-  toggleBtn.addEventListener('click', () => {
-    const current = document.body.dataset.theme;
-    const next = current === 'light' ? 'dark' : 'light';
-    document.body.dataset.theme = next;
-    toggleBtn.textContent = next === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode';
-  });
-</script>
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Islami_Bank_Bangladesh_Limited_Logo.svg/1200px-Islami_Bank_Bangladesh_Limited_Logo.svg.png" alt="Islami Bank Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>ইসলামী ব্যাংক বাংলাদেশ লিমিটেড</h3>
+                    <p>
+                        **Account Title:** PHP CARRY LLC<br>
+                        **Account No:** 20502500100297517<br>
+                        **Branch:** Modhupur, Tangail<br>
+                        **Routing No:** 125931483
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="Islami Bank Bangladesh Ltd\nAccount Title : PHP CARRY LLC\nAccount No   : 20502500100297517\nBranch Name: Modhupur, Tangail\nRouting No   : 125931483">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Islami_Bank_Bangladesh_Limited_Logo.svg/1200px-Islami_Bank_Bangladesh_Limited_Logo.svg.png" alt="Islami Bank Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>ইসলামী ব্যাংক বাংলাদেশ লিমিটেড</h3>
+                    <p>
+                        **Account Title:** SADIKUL ISLAM<br>
+                        **Account No:** 20502506700123214<br>
+                        **Branch:** Modhupur, Tangail<br>
+                        **Routing No:** 125931483
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="Islami Bank Bangladesh Ltd\nAccount Title : SADIKUL ISLAM\nAccount No   : 20502506700123214\nBranch Name: Modhupur, Tangail\nRouting No   : 125931483">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/BRAC_Bank_Logo.svg" alt="BRAC Bank Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>ব্র্যাক ব্যাংক লিমিটেড</h3>
+                    <p>
+                        **Name:** PHPCARRY LLC<br>
+                        **Account No:** 2051936460001
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="BRAC Bank Limited\nName: PHPCARRY LLC\nAC : 2051936460001">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/DBBL_Bank_Logo.svg/1200px-DBBL_Bank_Logo.svg.png" alt="Dutch Bangla Bank Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>ডাচ বাংলা ব্যাংক</h3>
+                    <p>
+                        **Name:** SADIKUL ISLAM<br>
+                        **Account No:** 2001050017826
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="Dutch Bangla Bank\nName: SADIKUL ISLAM \nAC : 2001050017826">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/Bkash_logo.svg/1200px-Bkash_logo.svg.png" alt="bKash Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>মোবাইল ব্যাংকিং (পার্সোনাল)</h3>
+                    <p>
+                        **01626277581:** bKash, Nagad, Rocket, MCash, SureCash, Upay<br>
+                        **01864900990:** bKash, Nagad, Rocket
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="01626277581 (personal) bKash/Nagad/Rocket/MCash/SureCash/Upay\n01864900990 (personal) bKash/Nagad/Rocket">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/Bkash_logo.svg/1200px-Bkash_logo.svg.png" alt="bKash Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>বিকাশ মার্চেন্ট</h3>
+                    <p>
+                        **Merchant No:** 01568424266
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="bKash Merchant: 01568424266">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/Bkash_logo.svg/1200px-Bkash_logo.svg.png" alt="bKash Logo" class="payment-logo">
+                <div class="payment-details">
+                    <h3>বিকাশ এজেন্ট</h3>
+                    <p>
+                        **Agent No:** 01323932736
+                    </p>
+                </div>
+                <button class="copy-button" data-copy="bKash Agent: 01323932736">
+                    <i class="far fa-copy"></i> কপি
+                </button>
+                <span class="copy-message">কপি করা হয়েছে!</span>
+            </div>
+
+            <div class="payment-note">
+                <p><i class="fas fa-bullhorn speaker-icon"></i> বিকাশে টাকা দেওয়ার সময় অবশ্যই আপনি এই **এজেন্ট নাম্বার** ব্যবহার করবেন, **ক্যাশ আউট** করবেন।</p>
+                <p><i class="fas fa-bullhorn speaker-icon"></i> পার্সোনাল নাম্বার দিয়ে বেশিরভাগ ট্রানজেকশন করলে সমস্যা হতে পারে।</p>
+                <p><i class="fas fa-bullhorn speaker-icon"></i> ক্যাশ আউট চার্জ সহকারে হিসাব পাঠাবেন।</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const body = document.body;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.classList.add(savedTheme);
+                if (savedTheme === 'dark-mode') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            }
+
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark-mode');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light-mode');
+                }
+            });
+
+            // Copy to clipboard functionality
+            document.querySelectorAll('.copy-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const textToCopy = this.getAttribute('data-copy');
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const parentOption = this.closest('.payment-option');
+                        parentOption.classList.add('copied');
+                        setTimeout(() => {
+                            parentOption.classList.remove('copied');
+                        }, 2000); // Message disappears after 2 seconds
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                        alert('কপি করা সম্ভব হয়নি। ম্যানুয়ালি কপি করুন।');
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
